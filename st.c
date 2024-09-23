@@ -2715,6 +2715,21 @@ drawregion(int x1, int y1, int x2, int y2)
 }
 
 void
+drawscrollindicator(void)
+{
+	Glyph g = { ' ', ATTR_REVERSE, defaultfg, defaultbg };
+
+	int s = term.scr;
+	int x = term.col - 1;
+
+	while (s != 0) {
+		g.u = (s % 10) + '0';
+		xdrawglyph(g, x--, 0);
+		s /= 10;
+	}
+}
+
+void
 draw(void)
 {
 	int cx = term.c.x, ocx = term.ocx, ocy = term.ocy;
@@ -2734,6 +2749,8 @@ draw(void)
 	if (term.scr == 0)
 		xdrawcursor(cx, term.c.y, term.line[term.c.y][cx],
 				term.ocx, term.ocy, term.line[term.ocy][term.ocx]);
+	else
+		drawscrollindicator();
 	term.ocx = cx;
 	term.ocy = term.c.y;
 	xfinishdraw();
